@@ -11,7 +11,9 @@ USER node
 RUN npm install
 RUN npm install elastic-apm-node
 RUN npm install express-ipfilter
-RUN install --save express-rate-limit
+RUN npm install express-rate-limit
+RUN npm install request
+
 
 COPY --chown=node:node . .
 

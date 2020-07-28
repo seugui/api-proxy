@@ -14,13 +14,6 @@ const apiLimiter = rateLimit({
 });
 app.use("/categories/", apiLimiter);
  
-//Limit repeated requests to public APIs
-const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 10
-});
-app.use("/categories/", apiLimiter);
-
 // Blacklist the following IPs
 ipfilter = require('express-ipfilter').IpFilter
 var ips = ['10.0..1'];
