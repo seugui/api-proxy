@@ -9,6 +9,9 @@ COPY package*.json ./
 USER node
 
 RUN npm install
+RUN npm install elastic-apm-node
+RUN npm install express-ipfilter
+RUN install --save express-rate-limit
 
 COPY --chown=node:node . .
 

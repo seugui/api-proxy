@@ -1,12 +1,44 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const config = require('./config/config');
 const express = require('express');
 const request = require('request');
 const cors = require('cors');
 const app = express();
 const port = config.port;
-app.use(cors());
 
+const rateLimit = require("express-rate-limit");
+ 
+// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+ 
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 15 minutes
+  max: 20 // limit each IP to 100 requests per windowMs
+});
+ 
+//  apply to all requests
+app.use(limiter);
+
+
+// Blacklist the following IPs
+ipfilter = require('express-ipfilter').IpFilter
+var ips = ['10.0..1'];
+app.use(ipfilter(ips));
+
+// Add this to the VERY top of the first file loaded in your app
+var apm = require('elastic-apm-node').start({
+  // Override service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: '',
+  captureBody: 'all',
+  
+  // Use if APM Server requires a token
+  secretToken: 'fp2VzNRlLb2IXnZf5T',
+
+  // Set custom APM Server URL (default: http://localhost:8200)
+  serverUrl: 'https://67a6aa3c74d043b1be0079038609d990.apm.us-east-1.aws.cloud.es.io:443'
+})
+
+app.use(cors());
 app.use('/', function(req, res) {
 
   //Take the baseurl from your api and also supply whatever 
@@ -20,12 +52,7 @@ app.use('/', function(req, res) {
   req.pipe(request({ qs: query , uri: url })).pipe(res);
 });
 
-
 //Start the server by listening on a port
 app.listen(port, () => {
-  console.log("+---------------------------------------+");
-  console.log("|                                       |");
   console.log(`|  [\x1b[34mSERVER\x1b[37m] Listening on port: \x1b[36m${port} 🤖  \x1b[37m |`);
-  console.log("|                                       |");
-  console.log("\x1b[37m+---------------------------------------+");
 });
