@@ -5,19 +5,21 @@ const request = require('request');
 const cors = require('cors');
 const app = express();
 const port = config.port;
-
 const rateLimit = require("express-rate-limit");
- 
-// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
- 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 15 minutes
-  max: 20 // limit each IP to 100 requests per windowMs
-});
- 
-//  apply to all requests
-app.use(limiter);
 
+//Limit repeated requests to public APIs
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10
+});
+app.use("/categories/", apiLimiter);
+ 
+//Limit repeated requests to public APIs
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10
+});
+app.use("/categories/", apiLimiter);
 
 // Blacklist the following IPs
 ipfilter = require('express-ipfilter').IpFilter
