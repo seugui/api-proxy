@@ -1,0 +1,4 @@
+node_modules
+tmp
+.proxyrc*
+!.proxyrc.json.example

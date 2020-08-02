@@ -1,22 +1,13 @@
-FROM node:10-alpine
+FROM node:12-alpine
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+ENV NODE_ENV=production
+ENV PORT=8080
+ENV HOST=0.0.0.0
 
-WORKDIR /home/node/app
+WORKDIR /app
 
-COPY package*.json ./
-
-USER node
+COPY . .
 
 RUN npm install
-RUN npm install elastic-apm-node
-RUN npm install express-ipfilter
-RUN npm install express-rate-limit
-RUN npm install request
 
-
-COPY --chown=node:node . .
-
-EXPOSE 3000
-
-CMD [ "node", "server.js" ]
+ENTRYPOINT ["npm", "run", "start"]

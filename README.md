@@ -1,74 +1,47 @@
-# Node API Proxy
-##### Proxy API-calls through an express-server
+# api-proxy-cache
 
-This repository contains everything to run a simpler API proxy.
-You can either use the deploy button to create everything automatically. It should work in most cases. Or you can clone the repo and do it yourself.
+[Express](https://expressjs.com/) web application to proxy requests to APIs and
+cache their responses in Redis.
 
+## Configure
 
-#### Deploy directly to Heroku (requires login):
+Copy [.proxyrc.json.example](.proxyrc.json.example) to .proxyrc.json and
+adapt for your environment.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+## NPM
 
-## Manual Instructions
+### Install
 
-1 . Clone repository and `cd` into the folder.
-
-2 . Install dependencies
-```bash
-npm install
+```
+npm install --save @europeana/api-proxy-cache
 ```
 
-3 . Create a `.env` file in the root folder and enter your credentials. `.env.example` is a template for setting your credentials:
+### Run
 
-```env
-API_URL=
-API_KEY_NAME=
-API_KEY_VALUE=
+```
+npx europeana-api-proxy-cache
 ```
 
-4. Start the server by running the start script: 
-```bash
-npm start
+## Docker
+
+### Build
+
+```
+docker build -t europeana/api-proxy-cache .
 ```
 
-5. Make your API-requests to [`http://localhost:3000`](http://localhost:3000) instead.
+### Run
 
-### Manual Deploy
-
-1 . Create an account on **[https://heroku.com](https://heroku.com)**. This should be pretty straight forward.
-
-2 . Install the Heroku CLI on your computer: <br/>**[https://devcenter.heroku.com/articles/heroku-cli](https://devcenter.heroku.com/articles/heroku-cli)**. 
-
-Check that you have the `heroku-cli` installed by checking the version number in your terminal:
-```bash
-heroku --version
+```
+docker run -it \
+  --mount type=bind,source="$(pwd)"/.proxyrc.json,target=/app/.proxyrc.json \
+  --env-file .env \
+  -p 3001:3001 \
+  europeana/api-proxy-cache
 ```
 
-3 . Connect the `Heroku CLI` to your account by writing the following command in your terminal and follow the instructions on the command line:
-```bash
-heroku login
-```
-_Use your credentials from the earlier account creation._
+## License
 
-4 . Then create a remote heroku project, kinda like creating a git repository on GitHub. This will create a project on Heroku with a random name. If you want to name your app you have to supply your own name like `heroku create project-name`. The command below will just create a random name:
-```bash
-heroku create
-```
+Licensed under the EUPL v1.2.
 
-5 . Push your app to __Heroku__ like pushing to GitHub expect for `origin` you have `heroku` (you will see a wall of code).
-```bash
-git push heroku master
-```
-
-6 . Visit your newly create app by opening it via heroku:
-```bash
-heroku open
-```
-
-
-If you are getting errors you can view the error logs by running this command:
-```bash
-heroku logs --tail
-```
-
-This might give you a hint on what's wrong.
+For full details, see [LICENSE.md](LICENSE.md).
